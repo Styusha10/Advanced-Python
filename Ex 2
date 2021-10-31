@@ -1,0 +1,11 @@
+def fib(N):
+    a = 0
+    b = 1
+    yield b
+    for i in range(2, N):
+        c = a + b
+        yield c
+        a, b = b, c
+
+N = int(input())
+for i in fib(N): print(i)
