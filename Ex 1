@@ -1,0 +1,13 @@
+def print_map_1(function, iterable):
+    print(*map(function, iterable), sep = ' ')
+
+def print_map_2(function, iterable):
+    i = iter(iterable)
+    while 1:
+        try:
+            print(function(next(i)), end = ' ')
+        except StopIteration: return
+
+print_map_1(abs, [1, -2, 3, -4])
+print('- - - - -')
+print_map_2(abs, [1, -2, 3, -4])
