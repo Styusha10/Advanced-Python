@@ -1,0 +1,9 @@
+from itertools import groupby
+
+def compress_string(s):
+    out = []
+    for symbol, count in groupby(s):
+        out.append((len(list(count)), int(symbol)))
+    return out
+
+print(compress_string('1222311'))
