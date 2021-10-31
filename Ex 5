@@ -1,0 +1,6 @@
+from itertools import permutations
+
+def get_combinations(s, n):
+    return sorted(list(map(''.join, permutations(s, n))))
+
+print(get_combinations("cat", 2))
