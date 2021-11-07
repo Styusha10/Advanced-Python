@@ -1,0 +1,55 @@
+class PrintCurrent(Exception): #количество чисел
+    pass
+
+class PrintAverage(Exception):
+    pass
+
+class PrintDispersion(Exception):
+    pass
+
+def coroutine():
+    print("Starting coroutine")
+    s = 0
+    n = 0
+    num = []
+    try:
+        while True:
+            try:
+                x = yield
+                num.append(x)
+                s += x
+                n += 1
+            except PrintCurrent:
+                yield n
+            except PrintAverage:
+                yield s/n
+            except PrintDispersion:
+                for i in num:
+                    q_sum = (i - s/n)**2
+                yield (q_sum/n)**0.5
+    finally:
+        print("Stop coroutine")
+
+coroutine = coroutine()
+next(coroutine)
+print('Rules:', '\n', 'Put number.', '\n', 'To calculate the average enter 1.', '\n', 'To calculate dispersion enter 2.', '\n', 'To count numbers enter 3.', '\n', 'To exit programm type e.', '\n')
+while True:
+    In = input()
+    try:
+        if In == 'e':
+            coroutine.close()
+            break
+        elif In == '1':
+            print("Average: ", coroutine.throw(PrintAverage))
+            next(coroutine)
+        elif In == '2':
+            print("Dispersion: ", coroutine.throw(PrintDispersion))
+            next(coroutine)
+        elif In == '3':
+            print("Count: ", coroutine.throw(PrintCurrent))
+            next(coroutine)
+        else:
+            In = int(In)
+            coroutine.send(In)
+    except Exception:
+         print('Invalid input. Please, try again.')
