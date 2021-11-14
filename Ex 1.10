@@ -1,0 +1,42 @@
+import asyncio
+
+async def factorial(name, number):
+    f = 1
+    for i in range(2, number + 1):
+        print(f"Task {name}: Compute factorial({i})...")
+        await asyncio.sleep(1)
+        f *= i
+    print(f"Task {name}: factorial({number}) = {f}")
+
+async def main():
+    await asyncio.gather(
+        factorial("A", 2),
+        factorial("B", 3),
+        factorial("C", 4),
+    )
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()
+
+#1) Управление передано в корутину main
+#2) С помощью await переключаемся на factorial, параллельно запускается расчет 3х факториалов: A, B, C
+#3) Они одновременно запускают for, i = 2
+#4) Одновременно печатают Task A/B/C: Compute factorial(2)...
+#5) Программа спит 1 секунду
+#6) Вычисление А завершается, печатается Task A: factorial(2) = 2
+#7) B и C запускают второй цикл for, печатают Task B/C: Compute factorial(3)..., ждут 1 секунду
+#8) Вычисление В завершается, печатается Task B: factorial(3) = 6
+#9) C запускает второй цикл for, печатает Task C: Compute factorial(4)..., ждет 1 секунду
+#10) Вычисление C завершается, печатается Task B: factorial(4) = 24
+
+#Итого напечатается:
+#Task A: Compute factorial(2)...
+#Task B: Compute factorial(2)...
+#Task C: Compute factorial(2)...
+#Task A: factorial(2) = 2
+#Task B: Compute factorial(3)...
+#Task C: Compute factorial(3)...
+#Task B: factorial(3) = 6
+#Task C: Compute factorial(4)...
+#Task C: factorial(4) = 24
